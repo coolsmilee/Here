@@ -1,0 +1,7 @@
+#ifndef DBAPI_H
+#define DBAPI_H
+
+int 
+DBInsert( char *user_name, char *passwd );
+
+#endif

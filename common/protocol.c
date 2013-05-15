@@ -1,0 +1,143 @@
+/*protocol.c*/
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "protocol.h"
+
+int 
+package( int op_code,
+         int paras_num,
+         parameter *paras,
+         int *package_size,
+         char *buf )
+{
+    int i,temp; 
+    
+    if( buf == NULL 
+        || package_size == NULL
+        || paras == NULL )
+    {
+        printf("buf = %p\n",buf);
+        printf("package_size = %p\n",package_size);
+        printf("paras = %p\n",paras);        
+        printf("package error!\n");
+        return -1;
+    }
+    
+    *package_size = 0;    
+    memset( buf, 0, sizeof(buf) );        
+    
+    /*put the op_code in*/
+    temp = htonl(op_code);
+    
+    memcpy( buf, 
+            &temp, 
+            sizeof(int) );
+             
+    *package_size += sizeof(int);
+    
+    /*put the paras_num in*/
+    temp = htonl(paras_num);
+    
+    memcpy( buf + *package_size, 
+            &temp, 
+            sizeof(int) );
+            
+    *package_size += sizeof(int);
+    
+    /*put each parameter in*/
+    for( i=0; i<paras_num; i++)
+    {
+        /*put parameter's length in*/
+        temp = htonl(paras[i].len);
+        
+        memcpy( buf + *package_size,
+                &temp,
+                sizeof(int) );
+                
+        *package_size += sizeof(int);
+        
+        /*put parameter's data in*/
+        memcpy( buf + *package_size,
+                paras[i].data,
+                paras[i].len );
+        
+        *package_size += paras[i].len;
+    }
+    return 0;
+}
+
+
+int 
+parse( int *op_code,
+       int *paras_num,
+       parameter *paras,
+       char *buf )
+{
+    int i, package_size, temp; 
+    
+    if( op_code == NULL 
+        || paras_num == NULL
+        || paras == NULL
+        || buf == NULL )
+    {
+        printf("op_code = %p\n",op_code);
+        printf("paras_num = %p\n",paras_num);
+        printf("paras = %p\n",paras);
+        printf("buf = %p\n",buf);        
+        printf("parse error!\n");
+        return -1;
+    }
+    package_size=0;
+    //printf("parse ok 1\n");
+    
+    /*get the op_code out*/
+    memcpy( &temp,
+            buf,
+            sizeof(int) );
+    
+    *op_code = ntohl(temp);
+    package_size += sizeof(int);
+    //printf("parse ok 2\n");
+    
+    /*get the paras_num out*/
+    memcpy( &temp,
+            buf + package_size,
+            sizeof(int) );
+    //printf("parse ok 3\n");
+    *paras_num = ntohl(temp);
+    package_size += sizeof(int);
+        
+    /*get each parameter out*/
+    if( paras <= 0)
+    {
+        printf("Parse error!");
+    }
+    //printf("parse ok 4\n");
+    for( i=0; i<*paras_num; i++)
+    {
+        //printf("parse loop ok1 i=%d\n",i);
+        //printf("package_size = %d\n",package_size);
+        /*get parameter's length out*/        
+        memcpy( &temp,
+                buf + package_size,
+                sizeof(int) );
+        //printf("temp = %d\n",temp);
+        paras[i].len = ntohl(temp);
+                
+        package_size += sizeof(int);
+        //printf("parse loop ok2 i=%d\n",i);
+        //printf("package_size = %d\n",package_size);
+        //printf("paras[%d].len = %d\n",i,paras[i].len);
+        /*get parameter's data out*/
+        memcpy( paras[i].data,
+                buf + package_size,
+                paras[i].len );
+                
+        package_size += paras[i].len;
+        //printf("parse loop ok3 i=%d\n",i);
+    }
+    return 0;
+}
+

@@ -1,0 +1,9 @@
+objects =   ../common/protocol.o client.o
+            
+client : $(objects)
+	gcc -o client $(objects)
+    
+../common/protocol.o : ../common/protocol.h
+
+clean :
+	-rm client $(objects)

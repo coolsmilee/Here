@@ -1,0 +1,29 @@
+#ifndef OPERATE_FUNCS_H
+#define OPERATE_FUNCS_H
+
+#include "../common/protocol.h"
+
+//#define DEBUG_MODE
+
+#define LOGIN_REQ 101
+#define LOGIN_RSP 101
+#define REGISTER_REQ 102
+#define REGISTER_RSP 102
+
+#define NOTE_REQ 2
+#define NOTE_RSP 3
+#define NOTE_ADD 4
+
+int 
+LoginRsp( int sockfd, int paras_num, parameter *paras );
+
+int 
+RegisterRsp( int sockfd, int paras_num, parameter *paras );
+
+int 
+NoteRsp( int sockfd );
+
+int 
+NoteAdd( int sockfd, int paras_num, parameter *paras );
+
+#endif

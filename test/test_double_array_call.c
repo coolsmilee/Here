@@ -1,0 +1,69 @@
+#include <stdio.h>
+#include <string.h>
+
+typedef struct{
+    int a;
+    char p[5];//p[5] = "as";
+}t_type;
+
+void test_call( char *q[2] )
+{
+    int i;
+    printf("in test_call\n");
+    for(i=0; i<2; i++)
+    {
+        printf("sizeof q[%d] = %d\n",i,sizeof(q[i]) );
+    }
+    /*
+    for(i=0; i<5; i++)
+    {
+        q[i] = "asdfasfd";
+    }
+    */
+    return;
+}
+
+void main(void)
+{
+    char p[3][6];
+    char * q[2];
+    
+    char buf1[10];
+    char buf2[20];
+    
+    q[1] = buf1;
+    q[2] = buf2;
+    
+    t_type t1;
+    printf("t1.a = %d t1.p = %s\n",t1.a,t1.p);
+    /*
+    printf("sizeof q[1] = %d\n",sizeof(q[1]) );
+    printf("sizeof q[2] = %d\n",sizeof(q[2]) );
+    printf("sizeof buf1 = %d\n",sizeof(buf1) );
+    printf("sizeof buf2 = %d\n",sizeof(buf2) );
+    buf1 = "asfd";
+    printf("buf1 = %s\n",buf1);
+    */
+    /*
+    int i=0;
+    for(i=0; i<5; i++)
+    {
+        q[i] = "12345678";
+    }
+    */
+    //memset( q, 0, sizeof(q) );
+    //test_call(q);
+    //printf("after test_call\n");
+    /*
+    for(i=0; i<5; i++)
+    {
+        printf("q[%d] = %s\n",i,q[i]);
+    }    
+    */
+    //printf("for p[3][6] sizeof(p) = %d sizeof(*p) = %d sizeof(**p) = %d\n",sizeof(p),sizeof(*p),sizeof(**p));
+    //printf("for *q[5] sizeof(q) = %d sizeof(*q) = %d sizeof(**q) = %d\n",sizeof(q),sizeof(*q),sizeof(**q));
+    
+    
+    return;
+}
+
